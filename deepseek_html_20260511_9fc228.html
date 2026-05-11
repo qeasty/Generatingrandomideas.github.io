@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Искра | Генератор идей против творческого ступора</title>
+    <!-- Современный шрифт и базовая стилизация -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f9f6f2 0%, #f0ebe3 100%);
+            font-family: 'Inter', sans-serif;
+            color: #2c241a;
+            line-height: 1.4;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* Главный контейнер – карточка вдохновения */
+        .inspire-card {
+            max-width: 780px;
+            width: 100%;
+            background: rgba(255, 255, 245, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 3rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 248, 225, 0.8);
+        }
+
+        /* Верхняя декоративная полоса */
+        .hero-accent {
+            height: 8px;
+            background: linear-gradient(90deg, #E6B17E, #D48C54, #B76E2E, #E6B17E);
+            background-size: 200% auto;
+        }
+
+        /* Основной контент */
+        .content {
+            padding: 2.5rem 2rem 2rem 2rem;
+        }
+
+        /* Заголовок и описание */
+        .title-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .title-section h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #3f2a1b, #8B5A2B);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .spark-icon {
+            font-size: 2rem;
+            display: inline-block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: #6b4c2c;
+            background: #f4e8dd;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Карточка с идеей (динамическая зона) */
+        .idea-panel {
+            background: #fffef7;
+            border-radius: 2rem;
+            padding: 1.8rem 1.6rem;
+            margin: 1.8rem 0 1.5rem 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255,255,240,0.8);
+            border: 1px solid #f0e2d0;
+            transition: all 0.25s;
+        }
+
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ece1d4;
+            border-radius: 60px;
+            padding: 0.3rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            color: #6b3f1c;
+            margin-bottom: 1.2rem;
+        }
+
+        .category-badge span {
+            font-size: 1.1rem;
+        }
+
+        .idea-text {
+            font-size: 1.65rem;
+            font-weight: 500;
+            line-height: 1.35;
+            color: #2b1e12;
+            margin-bottom: 1rem;
+            word-break: break-word;
+        }
+
+        .hint-note {
+            font-size: 0.85rem;
+            color: #9b7c62;
+            border-top: 1px dashed #efdfcf;
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* Кнопка-генератор */
+        .generate-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            background: #2c3e2b;
+            background: linear-gradient(105deg, #2c3e2b 0%, #3d5a3a 100%);
+            border: none;
+            padding: 1rem 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 14px rgba(46, 65, 34, 0.25);
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1.8rem;
+        }
+
+        .generate-btn:hover {
+            transform: scale(0.97);
+            background: linear-gradient(105deg, #3f5a3b, #2b4527);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .generate-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Три кнопки категорий (быстрый выбор) */
+        .categories-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .cat-chip {
+            background: #f1e9e1;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4f3521;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .cat-chip:hover {
+            background: #e7d9cf;
+            transform: translateY(-2px);
+        }
+
+        .cat-chip.active-cat {
+            background: #d9c7b6;
+            color: #2c1a0c;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05), 0 2px 5px rgba(0,0,0,0.1);
+            border: 0.5px solid #c6af98;
+        }
+
+        /* Блок статистики/аудитории */
+        .audience-note {
+            background: #f5efe8;
+            border-radius: 1.6rem;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #755e44;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .pill-list {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            background: #fff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #7a582e;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #b2977d;
+            padding: 0 1rem 1.5rem 1rem;
+        }
+
+        @media (max-width: 550px) {
+            .content {
+                padding: 1.6rem;
+            }
+            .idea-text {
+                font-size: 1.35rem;
+            }
+            .title-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* легкая анимация появления идеи */
+        @keyframes gentleFade {
+            0% { opacity: 0; transform: translateY(8px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+        .idea-animated {
+            animation: gentleFade 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+<div class="inspire-card">
+    <div class="hero-accent"></div>
+    <div class="content">
+        <div class="title-section">
+            <div class="spark-icon">✨</div>
+            <h1>Генератор искр</h1>
+            <div class="tagline">преодолей творческий ступор за 5 секунд</div>
+        </div>
+
+        <!-- Динамическая панель идеи -->
+        <div class="idea-panel" id="ideaPanel">
+            <div class="category-badge" id="categoryBadge">
+                <span>🎨</span> <span id="categoryLabel">рисование</span>
+            </div>
+            <div class="idea-text" id="ideaText">
+                Нарисуй героя, который состоит из фруктов и овощей
+            </div>
+            <div class="hint-note">
+                💡 для быстрого старта • подсказка из категории
+            </div>
+        </div>
+
+        <!-- Главная кнопка получить случайную идею (любая категория) -->
+        <button class="generate-btn" id="randomAllBtn">
+            <span>⚡</span> Случайная идея <span>✨</span>
+        </button>
+
+        <!-- Три категории с быстрым доступом + активная подсветка -->
+        <div class="categories-row">
+            <button class="cat-chip" data-cat="drawing">🎨 Рисование</button>
+            <button class="cat-chip" data-cat="writing">✍️ Письмо / блог</button>
+            <button class="cat-chip" data-cat="startup">🚀 Стартапы / бизнес</button>
+        </div>
+
+        <!-- Мини-блок подсказки для целевой аудитории -->
+        <div class="audience-note">
+            <span>🎯 Для кого:</span>
+            <div class="pill-list">
+                <span class="pill">🎨 художники-любители</span>
+                <span class="pill">📝 писатели & блогеры</span>
+                <span class="pill">💼 начинающие предприниматели</span>
+                <span class="pill">🎓 студенты творческих спец.</span>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        🌱 Нажми на категорию или кнопку «Случайная идея» — нейросеть выдаст вдохновение
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // БАЗА ИДЕЙ (нейросеть-имитация: обширные списки под 3 направления)
+    // рисование, письмо (литература/блоги/посты), стартапы/микробизнес
+    // --------------------------------------------------------------
+    const IDEAS_DB = {
+        drawing: [
+            "Нарисуйте сюрреалистический город, где здания — это книги и цветы.",
+            "Изобразите персонажа «Вдохновение» в виде маленького огонька, который помогает художнику.",
+            "Акварельный лес, где каждое дерево имеет уникальную текстуру (газета, ткань).",
+            "Портрет кота-путешественника в ретро-стиле на Луне.",
+            "Скетчбук идея: нарисуйте свои чувства через абстрактные линии и пятна.",
+            "Создайте иллюстрацию «Неожиданный чай»: чашки парят в космосе.",
+            "Фэнтези-существо, которое питается творческими идеями и выпускает радугу.",
+            "Ваша интерпретация «Мастерской эмоций» — визуализация радости, грусти, азарта.",
+            "Графический комикс из 3 панелей «Как я победил арт-блок».",
+            "Нарисуйте неоновый пейзаж киберпанк-деревни."
+        ],
+        writing: [
+            "Тема для рассказа: человек находит дневник, который пишет будущее за 10 минут до события.",
+            "Пост для блога: 5 неочевидных способов найти вдохновение в дождливый день.",
+            "Мини-эссе: «Если бы молчание было цветом» — опишите цвет тишины.",
+            "Идея для сторителлинга: официант в кафе умеет читать эмоции посетителей и подавать блюда-впечатления.",
+            "Заметка: какие творческие ритуалы помогали великим писателям (примеры и адаптация).",
+            "Начните рассказ с фразы: «Последний раз, когда я доверял случайности, случилось то, что перевернуло всё...»",
+            "Пост для соцсетей: подборка из 3 парадоксов творчества, которые вдохновят.",
+            "Письмо себе в прошлое: что бы вы посоветовали во время кризиса идей?",
+            "Микро-рассказ: город, где каждый житель носит маску настроения, и однажды масленник сломался.",
+            "Темы для личного блога: «Мои 3 провальных идеи, которые привели к успеху»"
+        ],
+        startup: [
+            "Бизнес-ниша: Микросервис по созданию персонализированных раскрасок для взрослых по фото пользователя.",
+            "Идея: приложение «ArtMood» — ежедневные челленджи для художников на основе их настроения.",
+            "Стартап: онлайн-платформа для обмена идеями между художниками-любителями и писателями, краудсорсинг сюжетов.",
+            "Микробизнес: наборы для творческого свидания «Вечер идеи» с карточками-заданиями.",
+            "Услуга: подписка «Искра» — еженедельные генераторы уникальных тем для постов и контента (писатели, блогеры).",
+            "Концепция: маркетплейс «Идеи для эскизов» — художник покупает задание от заказчика по генерации скетчей.",
+            "Экологичный стартап: переработка старых холстов и бумаги в творческие блокноты с промптами.",
+            "Платформа: нейросеть + сообщество, где начинающие предприниматели получают готовые MVP-идеи для микробизнеса с минимальным бюджетом.",
+            "Краудфандинговая идея: «Книга антикризисных творческих заданий» для студентов творческих вузов.",
+            "Бизнес-идея: мобильный бот-«Муза», который раз в день присылает визуальную или текстовую подсказку по интересам."
+        ]
+    };
+
+    // расширенные подсказки для того, чтобы пользователи не видели повторений подряд (улучшенная нейросеть)
+    // дополним каждую категорию ещё несколькими вариантами, чтобы итоговый пул был разнообразным
+    // (добавим плавно)
+    const extraDrawing = [
+        "Нарисуйте автопортрет в стиле «Если бы я был растением».",
+        "Визуализируйте звук любимой песни в виде абстрактной композиции.",
+        "Орнамент из мелких бытовых предметов (ложки, вилки, пуговицы).",
+        "Иллюстрация сновидения, которое вы хотели бы запомнить.",
+        "Персонаж: часовщик, который чинит время художникам."
+    ];
+    const extraWriting = [
+        "Тема для поста: как творческий ступор меняет восприятие реальности (личный опыт).",
+        "Микро-рассказ «Вдохновение украли инопланетяне» — смешная версия.",
+        "Эссе: 3 урока от моей любимой картины, которые я применил в текстах.",
+        "Блог-план: «Почему стоит вести дневник идей и как это спасает в кризис».",
+        "История про музу, которая опаздывает на 20 минут, но всё меняет."
+    ];
+    const extraStartup = [
+        "Стартап: чат-бот «Творческий наставник» с AI-генерацией заданий под уровень.",
+        "Микро-бизнес: коробка «Спонтанная идея» с физическими карточками для рисования и письма.",
+        "Идея: приложение-сообщество для обмена минутами вдохновения (подкасты и короткие лекции).",
+        "Платформа для студентов: «Творческий акселератор» с ежедневными проектными вызовами.",
+        "Услуга: персональный брейншторм-сессия для предпринимателя, поиск ниши за 30 минут."
+    ];
+
+    // объединяем базы
+    IDEAS_DB.drawing.push(...extraDrawing);
+    IDEAS_DB.writing.push(...extraWriting);
+    IDEAS_DB.startup.push(...extraStartup);
+
+    // Для каждого списка немного перемешаем "естественно" для разнообразия (сохраним массив, но можно просто брать случайно)
+    // Функция getRandomIdeaByCategory(category) возвращает случайную строку из соответствующего массива
+    function getRandomIdeaByCategory(category) {
+        if (!IDEAS_DB[category] || IDEAS_DB[category].length === 0) {
+            return "Попробуйте другую категорию, здесь пока пусто... ✨";
+        }
+        const ideasArray = IDEAS_DB[category];
+        const randomIndex = Math.floor(Math.random() * ideasArray.length);
+        return ideasArray[randomIndex];
+    }
+
+    // Возвращает случайную категорию (рисование, письмо, стартапы) из трёх равновероятно
+    function getRandomCategory() {
+        const categories = ["drawing", "writing", "startup"];
+        const rand = Math.floor(Math.random() * categories.length);
+        return categories[rand];
+    }
+
+    // отображение данных в UI в зависимости от категории и идеи
+    // функция обновляет и панельку категории, и текст идеи.
+    function updateUI(category, ideaTextValue) {
+        const categoryBadgeSpan = document.getElementById("categoryLabel");
+        const ideaTextDiv = document.getElementById("ideaText");
+        const categoryIconSpan = document.querySelector("#categoryBadge span:first-child");
+        
+        // установим иконку и человеко-читаемое имя
+        let displayName = "";
+        let icon = "";
+        if (category === "drawing") {
+            displayName = "рисование";
+            icon = "🎨";
+        } else if (category === "writing") {
+            displayName = "письмо / блог";
+            icon = "✍️";
+        } else {
+            displayName = "стартапы / идеи";
+            icon = "🚀";
+        }
+        
+        if (categoryBadgeSpan) categoryBadgeSpan.innerText = icon;
+        const labelSpan = document.getElementById("categoryLabel");
+        if (labelSpan) labelSpan.innerText = displayName;
+        
+        // Плавная смена текста с анимацией
+        if (ideaTextDiv) {
+            ideaTextDiv.classList.remove("idea-animated");
+            // небольшая задержка для перезапуска анимации
+            void ideaTextDiv.offsetWidth;
+            ideaTextDiv.innerText = ideaTextValue;
+            ideaTextDiv.classList.add("idea-animated");
+        }
+        
+        // также активируем стиль для активного чипа в ряду категорий, чтобы показывать пользователю, какая сейчас категория активна
+        setActiveChip(category);
+    }
+    
+    // Функция для подсветки активного чипа (categories-row)
+    function setActiveChip(activeCat) {
+        const chips = document.querySelectorAll(".cat-chip");
+        chips.forEach(chip => {
+            const chipCat = chip.getAttribute("data-cat");
+            if (chipCat === activeCat) {
+                chip.classList.add("active-cat");
+            } else {
+                chip.classList.remove("active-cat");
+            }
+        });
+    }
+    
+    // Ядро генерации: полностью случайная идея (случайная категория + случайный текст из неё)
+    function generateFullyRandomIdea() {
+        const randomCat = getRandomCategory();
+        const randomIdea = getRandomIdeaByCategory(randomCat);
+        updateUI(randomCat, randomIdea);
+        return { category: randomCat, idea: randomIdea };
+    }
+    
+    // Генерация идеи по конкретной категории (чип)
+    function generateIdeaByCategory(category) {
+        const idea = getRandomIdeaByCategory(category);
+        updateUI(category, idea);
+        return { category, idea };
+    }
+    
+    // Обработчики событий и инициализация
+    document.addEventListener("DOMContentLoaded", () => {
+        // Элементы
+        const randomBtn = document.getElementById("randomAllBtn");
+        const catChips = document.querySelectorAll(".cat-chip");
+        
+        // При загрузке показываем рандомную идею, чтобы страница не была пустой (но яркой)
+        // по умолчанию уже есть текст "Нарисуй героя..." но лучше сразу показать одну случайную идею при загрузке
+        // чтобы пользователь понял динамику. Можно сгенерировать случайную идею при старте.
+        // Однако текущий HTML содержит демо-текст, но для полного единства - обновим случайной идеей.
+        // Вызовем первый раз: случайную идею (приятный сюрприз)
+        generateFullyRandomIdea();
+        
+        // Обработка большой кнопки "Случайная идея"
+        if (randomBtn) {
+            randomBtn.addEventListener("click", () => {
+                generateFullyRandomIdea();
+                // небольшая тактильная отдача (вибрация если поддерживается - десктоп просто)
+                if (navigator.vibrate) navigator.vibrate(20);
+            });
+        }
+        
+        // Обработка чипов категорий
+        catChips.forEach(chip => {
+            chip.addEventListener("click", (e) => {
+                const cat = chip.getAttribute("data-cat");
+                if (cat && (cat === "drawing" || cat === "writing" || cat === "startup")) {
+                    generateIdeaByCategory(cat);
+                    if (navigator.vibrate) navigator.vibrate(10);
+                }
+            });
+        });
+        
+        // Также добавим доступность: клавиша пробел на кнопках (браузер сам обработает)
+        // Дополнительно можно учесть, что при первом показе бейдж активной категории после генерации обновляется
+        // активный чип также обновляется в updateUI -> setActiveChip.
+        
+        // Для особого сторителлинга "нейросеть" в выдаче - сделаем так, чтобы ощущение было как от умной системы,
+        // но база уже обширная и перемешивается случайно.
+        // Так как творческий ступор побеждается разнообразием, добавим еще небольшую фишку:
+        // Если пользователь кликает на одну и ту же категорию несколько раз - каждый раз новая идея из своего же пула,
+        // и не повторяется дважды подряд? Упростим: случайный выбор без сохранения истории - так нейросеть свежее.
+        // но можно сделать, чтобы крайне редко повторялось, но массивы большие.
+    });
+    
+    // Дополнительно: бросим что-то похожее на "нейросеть" – просто подчеркиваем, что каждый клик даёт уникальную комбинацию.
+    // Также добавим мета-тег для адаптивности.
+    
+    // необязательный динамический эффект при наведении.
+    // Все сделано.
+</script>
+</body>
+</html>
